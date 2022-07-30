@@ -29,21 +29,20 @@ public class LocationProviderFactory {
 
     public LocationProvider getInstance (Integer locationProvider) {
         LocationProvider provider;
-//        switch (locationProvider) {
-//            case Config.DISTANCE_FILTER_PROVIDER:
-//                provider = new DistanceFilterLocationProvider(mContext);
-//                break;
-//            case Config.ACTIVITY_PROVIDER:
-//                provider = new ActivityRecognitionLocationProvider(mContext);
-//                break;
-//            case Config.RAW_PROVIDER:
-//                provider = new RawLocationProvider(mContext);
-//                break;
-//            default:
-//                throw new IllegalArgumentException("Provider not found");
-//        }
+        switch (locationProvider) {
+            case Config.DISTANCE_FILTER_PROVIDER:
+                provider = new DistanceFilterLocationProvider(mContext);
+                break;
+            case Config.ACTIVITY_PROVIDER:
+                provider = new ActivityRecognitionLocationProvider(mContext);
+                break;
+            case Config.RAW_PROVIDER:
+                provider = new RawLocationProvider(mContext);
+                break;
+            default:
+                throw new IllegalArgumentException("Provider not found");
+        }
 
-        return  new RawLocationProvider(mContext);
-//        return provider;
+        return provider;
     }
 }

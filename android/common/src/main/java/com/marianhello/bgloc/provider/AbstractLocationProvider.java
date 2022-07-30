@@ -16,7 +16,6 @@ import android.content.IntentFilter;
 import android.location.Location;
 import android.media.AudioManager;
 import android.provider.Settings;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.gms.location.DetectedActivity;
@@ -95,13 +94,9 @@ public abstract class AbstractLocationProvider implements LocationProvider {
      */
     protected void handleLocation (Location location) {
         playDebugTone(Tone.BEEP);
-        Log.d("RawLocationProvider"," handleLocation mDelegate ="+mDelegate);
         if (mDelegate != null) {
             BackgroundLocation bgLocation = new BackgroundLocation(PROVIDER_ID, location);
             bgLocation.setMockLocationsEnabled(hasMockLocationsEnabled());
-
-            // bgLocation ,坐标系转化
-
             mDelegate.onLocation(bgLocation);
         }
     }

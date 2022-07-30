@@ -6,7 +6,6 @@ import android.content.Context;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
 
@@ -23,7 +22,7 @@ public class LocationManager {
     private Context mContext;
     private static LocationManager mLocationManager;
 
-    public static final String[] PERMISSIONS = new String[]{
+    public static final String[] PERMISSIONS = {
             Manifest.permission.ACCESS_COARSE_LOCATION,
             Manifest.permission.ACCESS_FINE_LOCATION
     };

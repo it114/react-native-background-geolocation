@@ -6,7 +6,6 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.marianhello.bgloc.Config;
 import com.marianhello.logging.LoggerManager;
@@ -38,38 +37,21 @@ public class RawLocationProvider extends AbstractLocationProvider implements Loc
         }
 
         Criteria criteria = new Criteria();
-//        criteria.setAltitudeRequired(false);
-//        criteria.setBearingRequired(false);
-//        criteria.setSpeedRequired(true);
-//        criteria.setCostAllowed(true);
-//        criteria.setAccuracy(Criteria.ACCURACY_FINE);
-//        criteria.setHorizontalAccuracy(translateDesiredAccuracy(mConfig.getDesiredAccuracy()));
-//        criteria.setPowerRequirement(Criteria.POWER_HIGH);
-
-        criteria.setAccuracy(Criteria.ACCURACY_FINE);
-        criteria.setPowerRequirement(Criteria.POWER_HIGH);
-        criteria.setAltitudeRequired(true);
+        criteria.setAltitudeRequired(false);
+        criteria.setBearingRequired(false);
         criteria.setSpeedRequired(true);
         criteria.setCostAllowed(true);
-        criteria.setBearingRequired(true);
-
-        //API level 9 and up
-        criteria.setHorizontalAccuracy(Criteria.ACCURACY_HIGH);
-        criteria.setVerticalAccuracy(Criteria.ACCURACY_HIGH);
-        criteria.setBearingAccuracy(Criteria.ACCURACY_LOW);
-        criteria.setSpeedAccuracy(Criteria.ACCURACY_HIGH);
+        criteria.setAccuracy(Criteria.ACCURACY_FINE);
+        criteria.setHorizontalAccuracy(translateDesiredAccuracy(mConfig.getDesiredAccuracy()));
+        criteria.setPowerRequirement(Criteria.POWER_HIGH);
 
         try {
-            //  locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 10, new MyLocationListener());
-//            locationManager.requestLocationUpdates(locationManager.getBestProvider(criteria, true), mConfig.getInterval(), mConfig.getDistanceFilter(), this);
-//            locationManager.requestLocationUpdates( LocationManager.GPS_PROVIDER , mConfig.getInterval(), mConfig.getDistanceFilter(), this);
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 10, this);
+            locationManager.requestLocationUpdates(locationManager.getBestProvider(criteria, true), mConfig.getInterval(), mConfig.getDistanceFilter(), this);
             isStarted = true;
         } catch (SecurityException e) {
             logger.error("Security exception: {}", e.getMessage());
             this.handleSecurityException(e);
         }
-
     }
 
     @Override
@@ -81,7 +63,6 @@ public class RawLocationProvider extends AbstractLocationProvider implements Loc
             locationManager.removeUpdates(this);
         } catch (SecurityException e) {
             logger.error("Security exception: {}", e.getMessage());
-            Log.d("RawLocationProvider","RawLocationProvider manager =  "+locationManager);
             this.handleSecurityException(e);
         } finally {
             isStarted = false;
@@ -105,7 +86,7 @@ public class RawLocationProvider extends AbstractLocationProvider implements Loc
     @Override
     public void onLocationChanged(Location location) {
         logger.debug("Location change: {}", location.toString());
-        Log.d("RawLocationProvider"," Location change: {}  =  "+location.toString());
+
         showDebugToast("acy:" + location.getAccuracy() + ",v:" + location.getSpeed());
         handleLocation(location);
     }
