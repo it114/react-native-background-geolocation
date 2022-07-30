@@ -1,3 +1,7 @@
+
+
+
+
 package com.marianhello.bgloc.provider;
 
 import android.content.Context;
@@ -6,6 +10,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.marianhello.bgloc.Config;
 import com.marianhello.logging.LoggerManager;
@@ -37,16 +42,32 @@ public class RawLocationProvider extends AbstractLocationProvider implements Loc
         }
 
         Criteria criteria = new Criteria();
-        criteria.setAltitudeRequired(false);
-        criteria.setBearingRequired(false);
+//        criteria.setAltitudeRequired(false);
+//        criteria.setBearingRequired(false);
+//        criteria.setSpeedRequired(true);
+//        criteria.setCostAllowed(true);
+//        criteria.setAccuracy(Criteria.ACCURACY_FINE);
+//        criteria.setHorizontalAccuracy(translateDesiredAccuracy(mConfig.getDesiredAccuracy()));
+//        criteria.setPowerRequirement(Criteria.POWER_HIGH);
+
+
+        criteria.setAccuracy(Criteria.ACCURACY_FINE);
+        criteria.setPowerRequirement(Criteria.POWER_HIGH);
+        criteria.setAltitudeRequired(true);
         criteria.setSpeedRequired(true);
         criteria.setCostAllowed(true);
-        criteria.setAccuracy(Criteria.ACCURACY_FINE);
-        criteria.setHorizontalAccuracy(translateDesiredAccuracy(mConfig.getDesiredAccuracy()));
-        criteria.setPowerRequirement(Criteria.POWER_HIGH);
+        criteria.setBearingRequired(true);
 
+        //API level 9 and up
+        criteria.setHorizontalAccuracy(Criteria.ACCURACY_HIGH);
+        criteria.setVerticalAccuracy(Criteria.ACCURACY_HIGH);
+        criteria.setBearingAccuracy(Criteria.ACCURACY_LOW);
+        criteria.setSpeedAccuracy(Criteria.ACCURACY_HIGH);
+        Log.e("RawLocationProvider","RawLocationProvider onStart ");
         try {
-            locationManager.requestLocationUpdates(locationManager.getBestProvider(criteria, true), mConfig.getInterval(), mConfig.getDistanceFilter(), this);
+            String manager = locationManager.getBestProvider(criteria, true);
+            Log.e("RawLocationProvider","RawLocationProvider manager =  "+manager);
+            locationManager.requestLocationUpdates(manager  , mConfig.getInterval(), mConfig.getDistanceFilter(), this );
             isStarted = true;
         } catch (SecurityException e) {
             logger.error("Security exception: {}", e.getMessage());
@@ -61,6 +82,7 @@ public class RawLocationProvider extends AbstractLocationProvider implements Loc
         }
         try {
             locationManager.removeUpdates(this);
+            Log.e("RawLocationProvider","stop");
         } catch (SecurityException e) {
             logger.error("Security exception: {}", e.getMessage());
             this.handleSecurityException(e);
@@ -86,7 +108,7 @@ public class RawLocationProvider extends AbstractLocationProvider implements Loc
     @Override
     public void onLocationChanged(Location location) {
         logger.debug("Location change: {}", location.toString());
-
+        Log.e("RawLocationProvider","onLocationChanged "+location.toString());
         showDebugToast("acy:" + location.getAccuracy() + ",v:" + location.getSpeed());
         handleLocation(location);
     }
@@ -94,16 +116,19 @@ public class RawLocationProvider extends AbstractLocationProvider implements Loc
     @Override
     public void onStatusChanged(String provider, int status, Bundle bundle) {
         logger.debug("Provider {} status changed: {}", provider, status);
+        Log.e("RawLocationProvider","onStatusChanged provider= "+provider+",status="+status);
     }
 
     @Override
     public void onProviderEnabled(String provider) {
         logger.debug("Provider {} was enabled", provider);
+        Log.e("RawLocationProvider","onProviderEnabled "+ provider);
     }
 
     @Override
     public void onProviderDisabled(String provider) {
         logger.debug("Provider {} was disabled", provider);
+        Log.e("RawLocationProvider","onProviderDisabled "+ provider);
     }
 
     /**
@@ -135,3 +160,6 @@ public class RawLocationProvider extends AbstractLocationProvider implements Loc
         super.onDestroy();
     }
 }
+
+
+

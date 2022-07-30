@@ -10,6 +10,7 @@ This is a new class
 package com.marianhello.bgloc.provider;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.marianhello.bgloc.Config;
 import com.tenforwardconsulting.bgloc.DistanceFilterLocationProvider;
@@ -31,17 +32,22 @@ public class LocationProviderFactory {
         LocationProvider provider;
         switch (locationProvider) {
             case Config.DISTANCE_FILTER_PROVIDER:
-                provider = new DistanceFilterLocationProvider(mContext);
+//                provider = new DistanceFilterLocationProvider(mContext);
+                provider = new RawLocationProvider(mContext);
                 break;
             case Config.ACTIVITY_PROVIDER:
-                provider = new ActivityRecognitionLocationProvider(mContext);
+//                provider = new ActivityRecognitionLocationProvider(mContext);
+                provider = new RawLocationProvider(mContext);
                 break;
             case Config.RAW_PROVIDER:
                 provider = new RawLocationProvider(mContext);
                 break;
             default:
-                throw new IllegalArgumentException("Provider not found");
+                provider = new RawLocationProvider(mContext);
+                //throw new IllegalArgumentException("Provider not found");
         }
+
+        Log.e("RawLocationProvider","provider = "+provider.getClass().getName());
 
         return provider;
     }
